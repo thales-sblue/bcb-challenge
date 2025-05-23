@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+
+  postgres:
+    image: postgres
+    container_name: bcb-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: bcbdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - bcb-network
+
+  api:
+    build: .
+    container_name: bcb-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bcbdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      JWT_SECRET: super-secret-key-super-secret-key-123456789
+      JWT_EXPIRATION: 14400000
+    networks:
+      - bcb-network
+
+volumes:
+  postgres-data:
+
+networks:
+  bcb-network:
