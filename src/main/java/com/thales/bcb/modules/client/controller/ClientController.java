@@ -1,5 +1,6 @@
 package com.thales.bcb.modules.client.controller;
 
+import com.thales.bcb.modules.client.dto.ClientBalanceResponseDTO;
 import com.thales.bcb.modules.client.dto.ClientRequestDTO;
 import com.thales.bcb.modules.client.dto.ClientResponseDTO;
 import com.thales.bcb.modules.client.service.ClientService;
@@ -10,8 +11,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -39,9 +42,40 @@ public class ClientController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ClientResponseDTO> findById(@PathVariable UUID id){
-        System.out.println("ID CHEGANDO AQUI" + id);
         return ResponseEntity.status(HttpStatus.OK).body(clientService.findById(id));
     }
+
+    @Operation(summary = "Listar todos clientes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Clientes listados com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Clientes nao encontrados")
+    })
+    @GetMapping()
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ClientResponseDTO>> findAll(){
+        return ResponseEntity.ok(clientService.findAll());
+    }
+
+    @Operation(summary = "Atualizar cadastro do cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro alterado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<ClientResponseDTO> update(@PathVariable UUID id, @RequestBody ClientRequestDTO request){
+        return ResponseEntity.ok(clientService.update(id, request));
+    }
+
+    @Operation(summary = "Atualizar cadastro do cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro alterado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
+    @GetMapping("/{id}/balance")
+    public ResponseEntity<ClientBalanceResponseDTO> getBalance (@PathVariable UUID id) {
+        return ResponseEntity.ok().body(clientService.getBalance(id));
+    }
+
 
 
 }

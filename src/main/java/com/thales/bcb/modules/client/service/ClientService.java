@@ -1,13 +1,16 @@
 package com.thales.bcb.modules.client.service;
 
+import com.thales.bcb.modules.client.dto.ClientBalanceResponseDTO;
 import com.thales.bcb.modules.client.dto.ClientRequestDTO;
 import com.thales.bcb.modules.client.dto.ClientResponseDTO;
 import com.thales.bcb.modules.client.entity.Client;
+import com.thales.bcb.modules.client.enums.PlanType;
 import com.thales.bcb.modules.client.mapper.ClientMapper;
 import com.thales.bcb.modules.client.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,6 +48,17 @@ public class ClientService {
         clientRepository.save(client);
 
         return clientMapper.toResponse(client);
+    }
+
+    public ClientBalanceResponseDTO getBalance (UUID id){
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        return ClientBalanceResponseDTO.builder()
+                .planType(client.getPlanType())
+                .balance(client.getPlanType().equals(PlanType.PREPAID) ? client.getBalance() : null)
+                .limit(client.getPlanType().equals(PlanType.POSTPAID) ? client.getLimit() : null)
+                .build();
     }
 
     public void delete(UUID id){
