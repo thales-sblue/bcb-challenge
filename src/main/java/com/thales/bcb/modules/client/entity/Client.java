@@ -1,6 +1,6 @@
 package com.thales.bcb.modules.client.entity;
 
-import com.thales.bcb.modules.client.enums.DocumentType;
+import com.thales.bcb.modules.client.enums.ClientDocumentType;
 import com.thales.bcb.modules.client.enums.PlanType;
 import com.thales.bcb.modules.client.enums.Role;
 import jakarta.persistence.*;
@@ -26,7 +26,7 @@ public class Client {
 
     private String documentId;
     @Enumerated(EnumType.STRING)
-    private DocumentType documentType;
+    private ClientDocumentType documentType;
 
     @Enumerated(EnumType.STRING)
     private PlanType planType;
@@ -39,4 +39,24 @@ public class Client {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public void processPayment(BigDecimal cost){
+        BigDecimal available = getAvailableAmount();
+
+        if(available.compareTo(cost) < 0){
+            throw new RuntimeException(this.planType == PlanType.PREPAID
+            ? "Saldo insuficiente"
+            : "Limite insuficiente");
+        }
+
+        if(this.planType == PlanType.PREPAID){
+            this.balance = this.balance.subtract(cost);
+        } else {
+            this.limit = this.limit.subtract(cost);
+        }
+    }
+
+    public BigDecimal getAvailableAmount(){
+        return this.planType == PlanType.PREPAID ? balance : limit;
+    }
 }

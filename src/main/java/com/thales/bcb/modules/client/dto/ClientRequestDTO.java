@@ -1,6 +1,6 @@
 package com.thales.bcb.modules.client.dto;
 
-import com.thales.bcb.modules.client.enums.DocumentType;
+import com.thales.bcb.modules.client.enums.ClientDocumentType;
 import com.thales.bcb.modules.client.enums.PlanType;
 import com.thales.bcb.modules.client.enums.Role;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class ClientRequestDTO {
     private String name;
     private String documentId;
-    private DocumentType documentType;
+    private ClientDocumentType documentType;
     private PlanType planType;
     private BigDecimal balance;
     private BigDecimal limit;

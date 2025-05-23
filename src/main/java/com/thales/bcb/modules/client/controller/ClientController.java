@@ -30,7 +30,7 @@ public class ClientController {
             @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<ClientResponseDTO> create(@RequestBody ClientRequestDTO request){
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.create(request));
     }

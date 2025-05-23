@@ -7,6 +7,8 @@ import com.thales.bcb.modules.client.entity.Client;
 import com.thales.bcb.modules.client.enums.PlanType;
 import com.thales.bcb.modules.client.mapper.ClientMapper;
 import com.thales.bcb.modules.client.repository.ClientRepository;
+import com.thales.bcb.modules.message.enums.Priority;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -66,5 +68,26 @@ public class ClientService {
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
         clientRepository.delete(client);
+    }
+
+    public BigDecimal processMessagePayment (UUID clientId, Priority priority){
+        var client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
+
+        if(!client.getActive()){
+            throw new IllegalStateException("Cliente inativo");
+        }
+
+        BigDecimal cost = getCostByPriority(priority);
+        client.processPayment(cost);
+        clientRepository.save(client);
+
+        return client.getAvailableAmount();
+    }
+
+    private BigDecimal getCostByPriority(Priority priority) {
+        return priority == Priority.URGENT
+                ? new BigDecimal("0.50")
+                : new BigDecimal("0.25");
     }
 }
