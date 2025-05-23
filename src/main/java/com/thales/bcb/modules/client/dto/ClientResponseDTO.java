@@ -2,6 +2,7 @@ package com.thales.bcb.modules.client.dto;
 
 import com.thales.bcb.modules.client.enums.DocumentType;
 import com.thales.bcb.modules.client.enums.PlanType;
+import com.thales.bcb.modules.client.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +21,5 @@ public class ClientResponseDTO {
     private BigDecimal balance;
     private BigDecimal limit;
     private Boolean active;
+    private Role role;
 }

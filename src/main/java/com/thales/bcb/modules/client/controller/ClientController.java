@@ -43,7 +43,6 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.findById(id));
     }
 
-    @GetMapping
 
 }
 

@@ -2,6 +2,7 @@ package com.thales.bcb.modules.client.entity;
 
 import com.thales.bcb.modules.client.enums.DocumentType;
 import com.thales.bcb.modules.client.enums.PlanType;
+import com.thales.bcb.modules.client.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,4 +36,7 @@ public class Client {
     private BigDecimal limit;
 
     private Boolean active;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
