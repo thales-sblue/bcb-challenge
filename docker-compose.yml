@@ -15,6 +15,15 @@ services:
     networks:
       - bcb-network
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: bcb-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - bcb-network
+
   api:
     build: .
     container_name: bcb-api
@@ -26,6 +35,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
       JWT_SECRET: ${JWT_SECRET}
     networks:
       - bcb-network
