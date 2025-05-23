@@ -42,6 +42,7 @@ logs/
 
 ### Ambiente ###
 .env
+.env.*
 
 ### Docker ###
 *.pid
