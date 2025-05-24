@@ -5,6 +5,7 @@ import com.thales.bcb.modules.auth.dto.AuthResponseDTO;
 import com.thales.bcb.modules.auth.service.AuthService;
 import com.thales.bcb.modules.client.entity.Client;
 import com.thales.bcb.modules.client.repository.ClientRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import java.time.Instant;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@Tag(name ="Auth", description = "Endpoints de autenticação de clientes")
 public class AuthController {
 
     private final ClientRepository clientRepository;

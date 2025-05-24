@@ -1,7 +1,6 @@
 package com.thales.bcb.modules.message.service;
 
 import com.thales.bcb.modules.client.dto.ClientResponseDTO;
-import com.thales.bcb.modules.client.entity.Client;
 import com.thales.bcb.modules.client.service.ClientService;
 import com.thales.bcb.modules.conversation.entity.Conversation;
 import com.thales.bcb.modules.conversation.service.ConversationService;
@@ -18,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,22 +42,12 @@ public class MessageService {
                 recipient.getName());
 
         conversationService.updateConversation(conversation, request.getContent());
-
+        request.setConversationId(conversation.getId());
 
         Message message = messageMapper.toEntity(request, clientId, clientService.getCostByPriority(request.getPriority()));
         messageRepository.save(message);
 
-        MessageDTO dto = MessageDTO.builder()
-                .id(message.getId())
-                .conversationId(message.getConversationId())
-                .senderId(message.getSenderId())
-                .recipientId(message.getRecipientId())
-                .content(message.getContent())
-                .timestamp(message.getTimestamp())
-                .priority(message.getPriority())
-                .status(message.getStatus())
-                .cost(message.getCost())
-                .build();
+        MessageDTO dto = messageMapper.toDTO(message);
         messagePublisher.sendMessage(dto);
 
         return messageMapper.toResponse(message, currentBalance);
@@ -73,36 +61,39 @@ public class MessageService {
         messageRepository.save(message);
     }
 
-    public MessageResponseDTO findById(UUID messageId){
+    public MessageResponseDTO findById(UUID messageId) {
         Message message = messageRepository.findById(messageId)
-                .orElseThrow(()-> new RuntimeException("Mensagem não encontrada"));
-
-        return messageMapper.toResponse(message, message.getCost());
+                .orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));
+        return mapToResponse(message);
     }
-
 
     public List<MessageResponseDTO> findAll() {
         return messageRepository.findAll().stream()
-                .map(message -> messageMapper.toResponse(message, message.getCost()))
+                .map(this::mapToResponse)
                 .toList();
     }
 
     public List<MessageResponseDTO> findByConversationId(UUID conversationId) {
         return messageRepository.findByConversationId(conversationId).stream()
-                .map(message -> messageMapper.toResponse(message, message.getCost()))
+                .map(this::mapToResponse)
                 .toList();
     }
 
     public List<MessageResponseDTO> findBySenderId(UUID senderId) {
         return messageRepository.findBySenderId(senderId).stream()
-                .map(message -> messageMapper.toResponse(message, message.getCost()))
+                .map(this::mapToResponse)
                 .toList();
     }
 
     public List<MessageResponseDTO> findByRecipientId(UUID recipientId) {
         return messageRepository.findByRecipientId(recipientId).stream()
-                .map(message -> messageMapper.toResponse(message, message.getCost()))
+                .map(this::mapToResponse)
                 .toList();
+    }
+
+    private MessageResponseDTO mapToResponse(Message message) {
+        ClientResponseDTO client = clientService.findById(message.getSenderId());
+        return messageMapper.toResponse(message, client.getBalance());
     }
 
 }

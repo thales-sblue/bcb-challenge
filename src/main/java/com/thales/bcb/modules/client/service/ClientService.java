@@ -24,6 +24,10 @@ public class ClientService {
     private final ClientMapper clientMapper;
 
     public ClientResponseDTO create(ClientRequestDTO request){
+        if(clientRepository.findByDocumentId(request.getDocumentId()).isPresent()){
+            throw new RuntimeException("DocumentId already exists");
+        }
+
         Client client = clientMapper.toEntity(request);
 
         client = clientRepository.save(client);

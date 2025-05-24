@@ -1,9 +1,10 @@
 package com.thales.bcb.modules.message.mapper;
 
+import com.thales.bcb.modules.message.dto.MessageDTO;
+import com.thales.bcb.modules.message.dto.MessageInConversationDTO;
 import com.thales.bcb.modules.message.dto.MessageRequestDTO;
 import com.thales.bcb.modules.message.dto.MessageResponseDTO;
 import com.thales.bcb.modules.message.entity.Message;
-import com.thales.bcb.modules.message.enums.Priority;
 import com.thales.bcb.modules.message.enums.Status;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,32 @@ public class MessageMapper {
                 .estimatedDelivery(message.getTimestamp().plusSeconds(5))
                 .cost(message.getCost())
                 .currentBalance(currentBalance)
+                .build();
+    }
+
+    public MessageInConversationDTO toInConversationDTO(Message message){
+        return MessageInConversationDTO.builder()
+                .id(message.getId())
+                .senderId(message.getSenderId())
+                .recipientId(message.getRecipientId())
+                .content(message.getContent())
+                .timestamp(message.getTimestamp())
+                .priority(message.getPriority().name())
+                .status(message.getStatus().name())
+                .build();
+    }
+
+    public MessageDTO toDTO(Message message) {
+        return MessageDTO.builder()
+                .id(message.getId())
+                .conversationId(message.getConversationId())
+                .senderId(message.getSenderId())
+                .recipientId(message.getRecipientId())
+                .content(message.getContent())
+                .timestamp(message.getTimestamp())
+                .priority(message.getPriority())
+                .status(message.getStatus())
+                .cost(message.getCost())
                 .build();
     }
 }

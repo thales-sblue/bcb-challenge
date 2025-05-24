@@ -26,7 +26,7 @@ public class MessageController {
 
     @Operation(summary = "Enviar nova mensagem.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Mensagem enviada com sucesso"),
+            @ApiResponse(responseCode = "200", description = "Mensagem enviada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @PostMapping()
@@ -38,7 +38,7 @@ public class MessageController {
 
     @Operation(summary = "Consultar mensagem por ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Mensagem retornada com sucesso"),
+            @ApiResponse(responseCode = "200", description = "Mensagem retornada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @GetMapping("/{id}")
@@ -48,7 +48,7 @@ public class MessageController {
 
     @Operation(summary = "Consultar status de uma mensagem.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Mensagem retornada com sucesso"),
+            @ApiResponse(responseCode = "200", description = "Mensagem retornada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @GetMapping("/{id}/status")
@@ -58,7 +58,7 @@ public class MessageController {
 
     @Operation(summary = "Consultar todas as mensagens ou mensagens com filtro conversationId, senderId ou recipientId.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Mensagem retornada com sucesso"),
+            @ApiResponse(responseCode = "200", description = "Mensagem retornada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @GetMapping()
