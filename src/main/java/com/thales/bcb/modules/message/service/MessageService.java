@@ -4,6 +4,7 @@ import com.thales.bcb.modules.client.service.ClientService;
 import com.thales.bcb.modules.message.dto.MessageRequestDTO;
 import com.thales.bcb.modules.message.dto.MessageResponseDTO;
 import com.thales.bcb.modules.message.entity.Message;
+import com.thales.bcb.modules.message.enums.Status;
 import com.thales.bcb.modules.message.mapper.MessageMapper;
 import com.thales.bcb.modules.message.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -30,4 +32,45 @@ public class MessageService {
 
         return messageMapper.toResponse(message, currentBalance);
     }
+
+    public void updateStatus(UUID messageId, Status status){
+        Message message = messageRepository.findById(messageId)
+                .orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));
+
+        message.setStatus(status);
+        messageRepository.save(message);
+    }
+
+    public MessageResponseDTO findById(UUID messageId){
+        Message message = messageRepository.findById(messageId)
+                .orElseThrow(()-> new RuntimeException("Mensagem não encontrada"));
+
+        return messageMapper.toResponse(message, message.getCost());
+    }
+
+
+    public List<MessageResponseDTO> findAll() {
+        return messageRepository.findAll().stream()
+                .map(message -> messageMapper.toResponse(message, message.getCost()))
+                .toList();
+    }
+
+    public List<MessageResponseDTO> findByConversationId(UUID conversationId) {
+        return messageRepository.findByConversationId(conversationId).stream()
+                .map(message -> messageMapper.toResponse(message, message.getCost()))
+                .toList();
+    }
+
+    public List<MessageResponseDTO> findBySenderId(UUID senderId) {
+        return messageRepository.findBySenderId(senderId).stream()
+                .map(message -> messageMapper.toResponse(message, message.getCost()))
+                .toList();
+    }
+
+    public List<MessageResponseDTO> findByRecipientId(UUID recipientId) {
+        return messageRepository.findByRecipientId(recipientId).stream()
+                .map(message -> messageMapper.toResponse(message, message.getCost()))
+                .toList();
+    }
+
 }
