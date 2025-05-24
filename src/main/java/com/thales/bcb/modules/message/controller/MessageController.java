@@ -26,7 +26,6 @@ import java.util.UUID;
 public class MessageController {
 
     private final MessageService messageService;
-    private final MessageMapper messageMapper;
 
     @Operation(summary = "Enviar nova mensagem.")
     @ApiResponses(value = {
