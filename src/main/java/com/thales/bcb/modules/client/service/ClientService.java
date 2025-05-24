@@ -85,7 +85,7 @@ public class ClientService {
         return client.getAvailableAmount();
     }
 
-    private BigDecimal getCostByPriority(Priority priority) {
+    public BigDecimal getCostByPriority(Priority priority) {
         return priority == Priority.URGENT
                 ? new BigDecimal("0.50")
                 : new BigDecimal("0.25");

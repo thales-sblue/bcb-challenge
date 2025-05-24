@@ -3,10 +3,12 @@ package com.thales.bcb.modules.auth.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.thales.bcb.modules.client.entity.Client;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -40,8 +42,8 @@ public class AuthService {
                     .withIssuer("bcb-api")
                     .build();
             return verifier.verify(token);
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid or expired token");
+        } catch (JWTVerificationException e) {
+            throw new BadCredentialsException("Invalid or expired token");
         }
     }
 

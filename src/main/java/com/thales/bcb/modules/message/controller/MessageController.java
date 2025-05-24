@@ -2,8 +2,6 @@ package com.thales.bcb.modules.message.controller;
 
 import com.thales.bcb.modules.message.dto.MessageRequestDTO;
 import com.thales.bcb.modules.message.dto.MessageResponseDTO;
-import com.thales.bcb.modules.message.entity.Message;
-import com.thales.bcb.modules.message.mapper.MessageMapper;
 import com.thales.bcb.modules.message.service.MessageService;
 import com.thales.bcb.security.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 

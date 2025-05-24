@@ -1,6 +1,10 @@
 package com.thales.bcb.modules.message.service;
 
+import com.thales.bcb.modules.client.dto.ClientResponseDTO;
+import com.thales.bcb.modules.client.entity.Client;
 import com.thales.bcb.modules.client.service.ClientService;
+import com.thales.bcb.modules.conversation.entity.Conversation;
+import com.thales.bcb.modules.conversation.service.ConversationService;
 import com.thales.bcb.modules.message.dto.MessageDTO;
 import com.thales.bcb.modules.message.dto.MessageRequestDTO;
 import com.thales.bcb.modules.message.dto.MessageResponseDTO;
@@ -26,13 +30,23 @@ public class MessageService {
     private final ClientService clientService;
     private final MessageMapper messageMapper;
     private final MessagePublisher messagePublisher;
+    private final ConversationService conversationService;
 
     @Transactional
     public MessageResponseDTO sendMessage(UUID clientId, MessageRequestDTO request){
 
         BigDecimal currentBalance = clientService.processMessagePayment(clientId, request.getPriority());
 
-        Message message = messageMapper.toEntity(request, clientId, currentBalance);
+        ClientResponseDTO recipient = clientService.findById(request.getRecipientId());
+        Conversation conversation = conversationService.getOrCreateConversation(
+                clientId,
+                UUID.fromString(recipient.getId()),
+                recipient.getName());
+
+        conversationService.updateConversation(conversation, request.getContent());
+
+
+        Message message = messageMapper.toEntity(request, clientId, clientService.getCostByPriority(request.getPriority()));
         messageRepository.save(message);
 
         MessageDTO dto = MessageDTO.builder()
