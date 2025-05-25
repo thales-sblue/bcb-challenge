@@ -1,11 +1,12 @@
 package com.thales.bcb.modules.conversation.service;
 
+import com.thales.bcb.exception.BusinessException;
+import com.thales.bcb.exception.ResourceNotFoundException;
 import com.thales.bcb.modules.conversation.dto.ConversationResponseDTO;
 import com.thales.bcb.modules.conversation.dto.ConversationSummaryDTO;
 import com.thales.bcb.modules.conversation.entity.Conversation;
 import com.thales.bcb.modules.conversation.mapper.ConversationMapper;
 import com.thales.bcb.modules.conversation.repository.ConversationRepository;
-import com.thales.bcb.modules.message.dto.MessageInConversationDTO;
 import com.thales.bcb.modules.message.dto.ReadStatusPayload;
 import com.thales.bcb.modules.message.entity.Message;
 import com.thales.bcb.modules.message.enums.Status;
@@ -37,7 +38,7 @@ public class ConversationService {
 
     public ConversationSummaryDTO findById (UUID conversationId){
         Conversation conversation = conversationRepository.findById(conversationId)
-                .orElseThrow(() -> new RuntimeException("Conversation not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Conversation not found " + conversationId));
 
         return conversationMapper.toSummary(conversation);
     }
@@ -61,11 +62,11 @@ public class ConversationService {
 
     public ConversationResponseDTO getConversationWithMessages(UUID conversationId, UUID clientId){
         Conversation conversation = conversationRepository.findById(conversationId)
-                .orElseThrow(() -> new RuntimeException("Conversation not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Conversation not found " + conversationId));
 
         boolean isParticipant = conversation.getClientId().equals(clientId) || conversation.getRecipientId().equals(clientId);
         if(!isParticipant){
-            throw new RuntimeException("You dont have acess to this conversation");
+            throw new BusinessException("You don't have access to this conversation");
         }
 
         List<UUID> unreadMessages = messageRepository.findMessageIdsByConversationIdAndRecipientIdAndStatus(conversationId, clientId, Status.DELIVERED);
@@ -85,7 +86,7 @@ public class ConversationService {
 
     public void updateUnreadCount(UUID conversationId, int successCount) {
         Conversation conversation = conversationRepository.findById(conversationId)
-                .orElseThrow(() -> new RuntimeException("Conversation not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Conversation not found " + conversationId));
 
         int currentUnread = conversation.getUnreadCount();
         int updatedUnread = Math.max(0, currentUnread - successCount);

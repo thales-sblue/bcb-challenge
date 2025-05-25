@@ -18,7 +18,7 @@ public interface ConversationRepository extends JpaRepository<Conversation, UUID
             WHERE
             (c.clientId = :clientId OR c.recipientId = :clientId)
            """)
-    Optional<Conversation> findByClientId(@Param("clientId") UUID clientId);
+    List<Conversation> findByClientId(@Param("clientId") UUID clientId);
 
     @Query("""
            SELECT c FROM Conversation c

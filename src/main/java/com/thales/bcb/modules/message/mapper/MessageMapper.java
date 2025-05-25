@@ -2,7 +2,6 @@ package com.thales.bcb.modules.message.mapper;
 
 import com.thales.bcb.modules.message.dto.*;
 import com.thales.bcb.modules.message.entity.Message;
-import com.thales.bcb.modules.message.enums.Priority;
 import com.thales.bcb.modules.message.enums.Status;
 import org.springframework.stereotype.Component;
 

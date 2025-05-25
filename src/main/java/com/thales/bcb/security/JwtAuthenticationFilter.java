@@ -7,8 +7,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -20,6 +22,7 @@ import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthService authService;
@@ -30,32 +33,54 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
-    )throws ServletException, IOException {
+    ) throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+
+        // Logs pra debug
+        System.out.println("Request Path: " + path);
+
+        // Ignora rotas públicas (Swagger, API docs, Auth e criação de cliente)
+        if (path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/swagger-ui.html")
+                || path.equals("/auth")
+                || (path.equals("/clients") && request.getMethod().equals("POST"))) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
 
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         final String token = authHeader.substring(7);
 
-        try{
+        try {
             DecodedJWT decodedJWT = authService.validateToken(token);
             String clientId = decodedJWT.getClaim("clientId").asString();
             String role = decodedJWT.getClaim("role").asString();
 
+            if (clientId == null || role == null) {
+                throw new BadCredentialsException("Invalid JWT token: missing claims");
+            }
+
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     clientId,
                     null,
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+ role))
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role))
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        } catch (BadCredentialsException e){
+        } catch (AuthenticationException e) {
             SecurityContextHolder.clearContext();
             authenticationEntryPoint.commence(request, response, e);
+            return;
         }
 
         filterChain.doFilter(request, response);

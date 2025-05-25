@@ -1,5 +1,6 @@
 package com.thales.bcb.modules.message.service;
 
+import com.thales.bcb.exception.ResourceNotFoundException;
 import com.thales.bcb.modules.client.dto.ClientResponseDTO;
 import com.thales.bcb.modules.client.service.ClientService;
 import com.thales.bcb.modules.conversation.entity.Conversation;
@@ -13,7 +14,6 @@ import com.thales.bcb.rabbitmq.publisher.MessagePublisher;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.cfg.defs.UUIDDef;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -59,7 +59,7 @@ public class MessageService {
 
     public void updateStatus(UUID messageId, Status status){
         Message message = messageRepository.findById(messageId)
-                .orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Message not found " + messageId));
 
         message.setStatus(status);
         messageRepository.save(message);
@@ -67,7 +67,7 @@ public class MessageService {
 
     public MessageSummaryDTO findById(UUID messageId) {
         Message message = messageRepository.findById(messageId)
-                .orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Message not found " + messageId));
         return mapToSummary(message);
     }
 

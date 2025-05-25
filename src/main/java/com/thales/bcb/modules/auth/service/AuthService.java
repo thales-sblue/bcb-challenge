@@ -5,10 +5,11 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.thales.bcb.exception.InvalidJwtAuthenticationException;
+import com.thales.bcb.exception.ResourceNotFoundException;
 import com.thales.bcb.modules.client.entity.Client;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -43,7 +44,7 @@ public class AuthService {
                     .build();
             return verifier.verify(token);
         } catch (JWTVerificationException e) {
-            throw new BadCredentialsException("Invalid or expired token");
+            throw new InvalidJwtAuthenticationException("Invalid or expired token " + token);
         }
     }
 

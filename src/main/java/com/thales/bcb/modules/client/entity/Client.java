@@ -1,5 +1,6 @@
 package com.thales.bcb.modules.client.entity;
 
+import com.thales.bcb.exception.BusinessException;
 import com.thales.bcb.modules.client.enums.ClientDocumentType;
 import com.thales.bcb.modules.client.enums.PlanType;
 import com.thales.bcb.modules.client.enums.Role;
@@ -44,9 +45,9 @@ public class Client {
         BigDecimal available = getAvailableAmount();
 
         if(available.compareTo(cost) < 0){
-            throw new RuntimeException(this.planType == PlanType.PREPAID
-            ? "Saldo insuficiente"
-            : "Limite insuficiente");
+            throw new BusinessException(this.planType == PlanType.PREPAID
+            ? "Saldo insuficiente para realizar essa operação."
+            : "Limite insuficiente para realizar essa operação.");
         }
 
         if(this.planType == PlanType.PREPAID){
