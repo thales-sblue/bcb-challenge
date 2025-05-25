@@ -12,6 +12,7 @@ API para gestão de clientes, conversas e envio de mensagens com processamento a
 - RabbitMQ
 - Swagger (OpenAPI)
 - Docker + Docker Compose
+- JUnit 5 + Mockito 
 
 ## Instruções de instalação e execução
 
@@ -45,6 +46,7 @@ Acesse:
   - Violação de regras de negócio (ex.: saldo insuficiente)
   - Retornos padronizados de erro no Swagger e na API.
 - Documentação completa no Swagger, protegida via JWT.
+- Testes unitários.
 
 ## Decisões técnicas e limitações
 
