@@ -17,7 +17,7 @@ API para gestão de clientes, conversas e envio de mensagens com processamento a
 
 Clone o projeto:
 
-git clone https://github.com/seu-usuario/bcb-challenge.git
+git clone https://github.com/thales-sblue/bcb-challenge.git
 cd bcb-challenge
 
 Rode com Docker:
