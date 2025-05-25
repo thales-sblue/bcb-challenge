@@ -1,10 +1,8 @@
 package com.thales.bcb.modules.message.mapper;
 
-import com.thales.bcb.modules.message.dto.MessageDTO;
-import com.thales.bcb.modules.message.dto.MessageInConversationDTO;
-import com.thales.bcb.modules.message.dto.MessageRequestDTO;
-import com.thales.bcb.modules.message.dto.MessageResponseDTO;
+import com.thales.bcb.modules.message.dto.*;
 import com.thales.bcb.modules.message.entity.Message;
+import com.thales.bcb.modules.message.enums.Priority;
 import com.thales.bcb.modules.message.enums.Status;
 import org.springframework.stereotype.Component;
 
@@ -61,6 +59,16 @@ public class MessageMapper {
                 .priority(message.getPriority())
                 .status(message.getStatus())
                 .cost(message.getCost())
+                .build();
+    }
+
+    public MessageSummaryDTO toSummaryDTO(Message message){
+        return MessageSummaryDTO.builder()
+                .id(message.getId())
+                .priority(message.getPriority())
+                .cost(message.getCost())
+                .content(message.getContent())
+                .status(message.getStatus())
                 .build();
     }
 }

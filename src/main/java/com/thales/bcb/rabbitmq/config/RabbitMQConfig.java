@@ -19,6 +19,12 @@ public class RabbitMQConfig {
     public static final String NORMAL_QUEUE = "queue.normal";
     public static final String URGENT_QUEUE = "queue.urgent";
     public static final String EXCHANGE = "exchange.message";
+    public static final String READ_QUEUE = "queue.read";
+
+    @Bean
+    Queue readQueue(){
+        return new Queue(READ_QUEUE, true);
+    }
 
     @Bean
     Queue normalQueue(){
@@ -33,6 +39,11 @@ public class RabbitMQConfig {
     @Bean
     DirectExchange exchange(){
         return new DirectExchange(EXCHANGE);
+    }
+
+    @Bean
+    Binding bindingRead(Queue readQueue, DirectExchange exchange){
+        return BindingBuilder.bind(readQueue).to(exchange).with("message.read");
     }
 
     @Bean

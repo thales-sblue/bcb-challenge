@@ -2,6 +2,8 @@ package com.thales.bcb.modules.message.controller;
 
 import com.thales.bcb.modules.message.dto.MessageRequestDTO;
 import com.thales.bcb.modules.message.dto.MessageResponseDTO;
+import com.thales.bcb.modules.message.dto.MessageSummaryDTO;
+import com.thales.bcb.modules.message.enums.Status;
 import com.thales.bcb.modules.message.service.MessageService;
 import com.thales.bcb.security.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +44,7 @@ public class MessageController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<MessageResponseDTO> getById(@PathVariable UUID id){
+    public ResponseEntity<MessageSummaryDTO> getById(@PathVariable UUID id){
         return ResponseEntity.status(HttpStatus.OK).body(messageService.findById(id));
     }
 
@@ -52,7 +54,7 @@ public class MessageController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @GetMapping("/{id}/status")
-    public String getStatus(@PathVariable UUID id){
+    public Status getStatus(@PathVariable UUID id){
         return messageService.findById(id).getStatus();
     }
 
@@ -62,7 +64,7 @@ public class MessageController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @GetMapping()
-    public List<MessageResponseDTO> listMessages(
+    public List<MessageSummaryDTO> listMessages(
             @RequestParam(required = false) UUID conversationId,
             @RequestParam(required = false) UUID senderId,
             @RequestParam(required = false) UUID recipientId

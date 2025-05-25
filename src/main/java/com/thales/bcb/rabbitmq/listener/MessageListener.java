@@ -34,20 +34,18 @@ public class MessageListener {
 
     private void processMessage(MessageDTO message, String priority){
         try{
-            log.info("Iniciado processamento da mensagem [{}] com prioridade {}", message.getId(), message.getPriority());
+            log.info("[LISTENER]Iniciado entrega da mensagem [{}] com prioridade {}", message.getId(), message.getPriority());
 
-            messageService.updateStatus(message.getId(), Status.PROCESSING);
-
-            //Simular tempo de processamento
             Thread.sleep(priority.equalsIgnoreCase("URGENT")? 1000 : 3000);
 
             messageService.updateStatus(message.getId(), Status.DELIVERED);
 
-            log.info("Mensagem [{}] processada e entregue com sucesso", message.getId());
+            log.info("[LISTENER]Mensagem [{}] entregue com sucesso", message.getId());
 
         }catch (InterruptedException e){
+            messageService.updateStatus(message.getId(), Status.FAILED);
             Thread.currentThread().interrupt();
-            log.error("Erro ao processar mensagem [{}]: {}", message.getId(), e.getMessage());
+            log.error("[LISTENER]Erro ao processar mensagem [{}]: {}", message.getId(), e.getMessage());
         }
     }
 }

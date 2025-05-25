@@ -43,7 +43,7 @@ public class ConversationMapper {
     }
 
     public ConversationSummaryDTO toSummary(Conversation conversation){
-        return ConversationResponseDTO.builder()
+        return ConversationSummaryDTO.builder()
                 .id(conversation.getId())
                 .clientId(conversation.getClientId())
                 .recipientId(conversation.getRecipientId())

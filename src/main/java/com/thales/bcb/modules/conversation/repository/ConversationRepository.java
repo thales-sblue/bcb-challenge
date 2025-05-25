@@ -13,7 +13,12 @@ import java.util.UUID;
 @Repository
 public interface ConversationRepository extends JpaRepository<Conversation, UUID> {
 
-    List<Conversation> findByClientId(UUID clientId);
+    @Query("""
+           SELECT c FROM Conversation c
+            WHERE
+            (c.clientId = :clientId OR c.recipientId = :clientId)
+           """)
+    Optional<Conversation> findByClientId(@Param("clientId") UUID clientId);
 
     @Query("""
            SELECT c FROM Conversation c

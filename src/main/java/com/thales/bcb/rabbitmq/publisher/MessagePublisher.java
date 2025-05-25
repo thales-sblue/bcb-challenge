@@ -2,6 +2,8 @@ package com.thales.bcb.rabbitmq.publisher;
 
 import com.thales.bcb.modules.message.dto.MessageDTO;
 import com.thales.bcb.modules.message.enums.Priority;
+import com.thales.bcb.modules.message.enums.Status;
+import com.thales.bcb.modules.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -20,8 +22,8 @@ public class MessagePublisher {
     private final AtomicInteger urgentCount = new AtomicInteger(0);
 
     public void sendMessage(MessageDTO message){
+        log.info("[PUBLISHER][MESSAGE] Iniciando processamento da mensagem: {}", message.getId());
         String routingKey = getRoutingKey(message);
-
 
         rabbitTemplate.convertAndSend(
                 EXCHANGE,
@@ -29,7 +31,8 @@ public class MessagePublisher {
                 message
         );
 
-        log.info("[PUBLISHER] Mensagem enviada para a fila -> {}", routingKey);
+        log.info("[PUBLISHER][MESSAGE] Mensagem enviada para a fila: {}", routingKey);
+
     }
 
     private String getRoutingKey(MessageDTO message) {
@@ -41,11 +44,11 @@ public class MessagePublisher {
         }
 
         int count = urgentCount.incrementAndGet();
-        log.info("Contador de mensagens urgentes: {}", count);
+        log.info("[PUBLISHER][MESSAGE]Contador de mensagens urgentes: {}", count);
 
         if(count >= 3){
             urgentCount.set(0);
-            log.info("Balanceamento - Forçando envio dee mensagem normal anti-starvation");
+            log.info("[PUBLISHER][MESSAGE]Balanceamento - Forçando envio de mensagem normal anti-starvation");
             return "message.normal";
         }
 
