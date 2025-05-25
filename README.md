@@ -1,4 +1,4 @@
-# BCB API – Backend Challenge
+# BCB – Backend Challenge
 
 API para gestão de clientes, conversas e envio de mensagens com processamento assíncrono, controle de saldo/limite, priorização de mensagens e autenticação via JWT.
 
