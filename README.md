@@ -45,14 +45,14 @@ Acesse:
   - Validações de entrada (DTOs)
   - Violação de regras de negócio (ex.: saldo insuficiente)
   - Retornos padronizados de erro no Swagger e na API.
-- Documentação completa no Swagger, protegida via JWT.
-- Testes unitários.
+- Documentação completa no Swagger.
+- Testes unitários.  
 
 ## Decisões técnicas e limitações
 
 - API stateless.
 - Uso de RabbitMQ para garantir um fluxo de mensagens assíncrono e priorizado.
-- Tratamento de erros técnicos e de negócio.
+- Tratamento de erros técnicos e erros de negócio.
 - Sem implementação de Dead-letter ou Retries (possível evolução futura).
 
 ## Docker-compose incluso
