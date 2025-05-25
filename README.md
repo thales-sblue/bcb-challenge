@@ -48,9 +48,9 @@ Acesse:
 
 ## Decisões técnicas e limitações
 
-- API desenhada 100% stateless, segura e escalável.
+- API stateless.
 - Uso de RabbitMQ para garantir um fluxo de mensagens assíncrono e priorizado.
-- Tratamento robusto de erros, tanto técnicos quanto de negócio.
+- Tratamento de erros técnicos e de negócio.
 - Sem implementação de Dead-letter ou Retries (possível evolução futura).
 
 ## Docker-compose incluso
