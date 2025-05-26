@@ -2,8 +2,6 @@ package com.thales.bcb.rabbitmq.publisher;
 
 import com.thales.bcb.modules.message.dto.MessageDTO;
 import com.thales.bcb.modules.message.enums.Priority;
-import com.thales.bcb.modules.message.enums.Status;
-import com.thales.bcb.modules.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

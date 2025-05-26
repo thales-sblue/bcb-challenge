@@ -3,6 +3,7 @@ package com.thales.bcb.modules.message.controller;
 import com.thales.bcb.modules.message.dto.MessageRequestDTO;
 import com.thales.bcb.modules.message.dto.MessageResponseDTO;
 import com.thales.bcb.modules.message.dto.MessageSummaryDTO;
+import com.thales.bcb.modules.message.enums.Priority;
 import com.thales.bcb.modules.message.enums.Status;
 import com.thales.bcb.modules.message.service.MessageService;
 import com.thales.bcb.security.SecurityUtil;
@@ -36,13 +37,14 @@ public class MessageController {
             @ApiResponse(responseCode = "201", description = "Mensagem enviada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos ou saldo/limite insuficiente"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação ou dados inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
     @PostMapping()
     public ResponseEntity<MessageResponseDTO> sendMessage(@RequestBody MessageRequestDTO request){
         UUID clientId = SecurityUtil.getClientIdFromToken();
         MessageResponseDTO response = messageService.sendMessage(clientId, request);
-        return ResponseEntity.status(201).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(
@@ -77,7 +79,7 @@ public class MessageController {
 
     @Operation(
             summary = "Listar mensagens",
-            description = "Retorna uma lista de mensagens. Pode ser filtrada por conversationId, senderId ou recipientId."
+            description = "Retorna uma lista de mensagens. Pode ser filtrada por priority e status."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Mensagens retornadas com sucesso"),
@@ -87,18 +89,10 @@ public class MessageController {
     })
     @GetMapping()
     public List<MessageSummaryDTO> listMessages(
-            @RequestParam(required = false) UUID conversationId,
-            @RequestParam(required = false) UUID senderId,
-            @RequestParam(required = false) UUID recipientId
+            @RequestParam(required = false) Priority priority,
+            @RequestParam(required = false) Status status
     ) {
-        if (conversationId != null) {
-            return messageService.findByConversationId(conversationId);
-        } else if (senderId != null) {
-            return messageService.findBySenderId(senderId);
-        } else if (recipientId != null) {
-            return messageService.findByRecipientId(recipientId);
-        } else {
-            return messageService.findAll();
-        }
+        return messageService.listMessages(priority, status);
     }
+
 }

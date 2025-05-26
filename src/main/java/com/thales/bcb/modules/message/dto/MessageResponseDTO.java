@@ -1,5 +1,6 @@
 package com.thales.bcb.modules.message.dto;
 
+import com.thales.bcb.modules.client.enums.PlanType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

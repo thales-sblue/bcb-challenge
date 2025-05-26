@@ -1,51 +1,12 @@
 package com.thales.bcb.modules.auth.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.thales.bcb.exception.InvalidJwtAuthenticationException;
-import com.thales.bcb.exception.ResourceNotFoundException;
-import com.thales.bcb.modules.client.entity.Client;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import com.thales.bcb.modules.auth.dto.AuthResponseDTO;
+import com.thales.bcb.modules.client.dto.ClientResponseDTO;
 
-import java.time.Duration;
-import java.time.Instant;
+public interface AuthService {
 
-@Service
-@RequiredArgsConstructor
-public class AuthService {
+    AuthResponseDTO generateToken(String clientId);
 
-    @Value("${jwt.secret}")
-    private String secretKey;
-
-    public String generateToken(Client client) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        Instant expiresAt = Instant.now().plus(Duration.ofMinutes(30));
-
-        return JWT.create()
-                .withIssuer("bcb-api")
-                .withSubject(client.getId().toString())
-                .withClaim("clientId", client.getId().toString())
-                .withClaim("documentId", client.getDocumentId())
-                .withClaim("role",client.getRole().name())
-                .withExpiresAt(expiresAt)
-                .sign(algorithm);
-    }
-
-    public DecodedJWT validateToken(String token){
-        try{
-            Algorithm algorithm = Algorithm.HMAC256(secretKey);
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer("bcb-api")
-                    .build();
-            return verifier.verify(token);
-        } catch (JWTVerificationException e) {
-            throw new InvalidJwtAuthenticationException("Invalid or expired token " + token);
-        }
-    }
-
+    DecodedJWT validateToken(String token);
 }

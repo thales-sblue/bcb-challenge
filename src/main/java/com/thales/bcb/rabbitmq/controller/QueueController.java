@@ -1,11 +1,10 @@
 package com.thales.bcb.rabbitmq.controller;
 
-import com.thales.bcb.rabbitmq.service.QueueService;
+import com.thales.bcb.rabbitmq.service.impl.QueueServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +18,7 @@ import java.util.Map;
 @Tag(name = "Queue", description = "Endpoints de monitoramento da fila RabbitMQ")
 public class QueueController {
 
-    private final QueueService queueService;
+    private final QueueServiceImpl queueServiceImpl;
 
     @Operation(summary = "Verificar status da fila RabbitMQ")
     @ApiResponses(value = {
@@ -29,6 +28,6 @@ public class QueueController {
     })
     @GetMapping("/status")
     public Map<String, Object> getQueueStatus() {
-        return queueService.getQueueStatus();
+        return queueServiceImpl.getQueueStatus();
     }
 }

@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "clients")
+@Table(name = "client")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,14 +23,20 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(unique = true, nullable = false)
     private String documentId;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ClientDocumentType documentType;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PlanType planType;
+
     private BigDecimal balance;
 
     @Column(name = "limit_value")
@@ -38,6 +44,7 @@ public class Client {
 
     private Boolean active;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 

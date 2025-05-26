@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/clients")
 @RequiredArgsConstructor
-@Tag(name ="Clients", description = "Endpoints de gerenciamento de clientes")
+@Tag(name = "Clients", description = "Endpoints de gerenciamento de clientes")
 public class ClientController {
 
     private final ClientService clientService;
@@ -33,7 +33,7 @@ public class ClientController {
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
     @PostMapping()
-    public ResponseEntity<ClientResponseDTO> create(@RequestBody ClientRequestDTO request){
+    public ResponseEntity<ClientResponseDTO> create(@RequestBody ClientRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.create(request));
     }
 
@@ -45,7 +45,7 @@ public class ClientController {
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ClientResponseDTO> findById(@PathVariable UUID id){
+    public ResponseEntity<ClientResponseDTO> findById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.findById(id));
     }
 
@@ -58,8 +58,8 @@ public class ClientController {
     })
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ClientResponseDTO>> findAll(){
-        return ResponseEntity.ok(clientService.findAll());
+    public ResponseEntity<List<ClientResponseDTO>> findAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(clientService.findAll());
     }
 
     @SecurityRequirement(name = "jwt_auth")
@@ -71,8 +71,9 @@ public class ClientController {
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<ClientResponseDTO> update(@PathVariable UUID id, @RequestBody ClientRequestDTO request){
-        return ResponseEntity.ok(clientService.update(id, request));
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ClientResponseDTO> update(@PathVariable UUID id, @RequestBody ClientRequestDTO request) {
+        return ResponseEntity.status(HttpStatus.OK).body(clientService.update(id, request));
     }
 
     @SecurityRequirement(name = "jwt_auth")
@@ -83,8 +84,8 @@ public class ClientController {
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
     @GetMapping("/{id}/balance")
-    public ResponseEntity<ClientBalanceResponseDTO> getBalance (@PathVariable UUID id) {
-        return ResponseEntity.ok().body(clientService.getBalance(id));
+    public ResponseEntity<ClientBalanceResponseDTO> getBalance(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body(clientService.getBalance(id));
     }
 }
 

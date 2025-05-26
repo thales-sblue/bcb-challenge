@@ -19,30 +19,30 @@ public class MessageListener {
     private final MessageService messageService;
 
     @RabbitListener(queues = URGENT_QUEUE)
-    public void listenUrgentQueue(MessageDTO message){
+    public void listenUrgentQueue(MessageDTO message) {
         log.info("[LISTENER][URGENT] Processando mensagem {}", message);
 
         processMessage(message, "URGENT");
     }
 
     @RabbitListener(queues = NORMAL_QUEUE)
-    public void listenNormalQueue(MessageDTO message){
+    public void listenNormalQueue(MessageDTO message) {
         log.info("[LISTENER][NORMAL] Processando mensagem {}", message);
 
         processMessage(message, "NORMAL");
     }
 
-    private void processMessage(MessageDTO message, String priority){
-        try{
+    private void processMessage(MessageDTO message, String priority) {
+        try {
             log.info("[LISTENER]Iniciado entrega da mensagem [{}] com prioridade {}", message.getId(), message.getPriority());
 
-            Thread.sleep(priority.equalsIgnoreCase("URGENT")? 1000 : 3000);
+            Thread.sleep(priority.equalsIgnoreCase("URGENT") ? 1000 : 3000);
 
             messageService.updateStatus(message.getId(), Status.DELIVERED);
 
             log.info("[LISTENER]Mensagem [{}] entregue com sucesso", message.getId());
 
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             messageService.updateStatus(message.getId(), Status.FAILED);
             Thread.currentThread().interrupt();
             log.error("[LISTENER]Erro ao processar mensagem [{}]: {}", message.getId(), e.getMessage());

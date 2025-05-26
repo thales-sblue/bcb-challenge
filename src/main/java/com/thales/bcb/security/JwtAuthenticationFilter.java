@@ -1,7 +1,7 @@
 package com.thales.bcb.security;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.thales.bcb.modules.auth.service.AuthService;
+import com.thales.bcb.modules.auth.service.impl.AuthServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ import java.util.Collections;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final AuthService authService;
+    private final AuthServiceImpl authServiceImpl;
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Override
@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String token = authHeader.substring(7);
 
         try {
-            DecodedJWT decodedJWT = authService.validateToken(token);
+            DecodedJWT decodedJWT = authServiceImpl.validateToken(token);
             String clientId = decodedJWT.getClaim("clientId").asString();
             String role = decodedJWT.getClaim("role").asString();
 

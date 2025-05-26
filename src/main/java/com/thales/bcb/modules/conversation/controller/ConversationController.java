@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/conversations")
 @RequiredArgsConstructor
-@Tag(name ="Conversas", description = "Endpoints de gerenciamento de conversas")
+@Tag(name = "Conversas", description = "Endpoints de gerenciamento de conversas")
 @SecurityRequirement(name = "jwt_auth")
 public class ConversationController {
 
@@ -37,7 +37,7 @@ public class ConversationController {
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
     @GetMapping()
-    public List<ConversationSummaryDTO> listConversations(){
+    public List<ConversationSummaryDTO> listConversations() {
         UUID clientId = SecurityUtil.getClientIdFromToken();
         return conversationService.listAllByClient(clientId);
     }
@@ -53,7 +53,7 @@ public class ConversationController {
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
     @GetMapping("/{id}")
-    public ConversationSummaryDTO getConversation(@PathVariable UUID id){
+    public ConversationSummaryDTO getConversation(@PathVariable UUID id) {
         return conversationService.findById(id);
     }
 
@@ -65,12 +65,13 @@ public class ConversationController {
             @ApiResponse(responseCode = "200", description = "Mensagens listadas com sucesso"),
             @ApiResponse(responseCode = "404", description = "Conversa não encontrada"),
             @ApiResponse(responseCode = "403", description = "Acesso negado à conversa"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação ou dados inválidos"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
 
     @GetMapping("/{id}/messages")
-    public ConversationResponseDTO getConversationWithMessages(@PathVariable UUID id){
+    public ConversationResponseDTO getConversationWithMessages(@PathVariable UUID id) {
         UUID clientId = SecurityUtil.getClientIdFromToken();
         return conversationService.getConversationWithMessages(id, clientId);
     }

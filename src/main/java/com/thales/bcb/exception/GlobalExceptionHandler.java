@@ -30,10 +30,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<StandardError> handleBusinessException(BusinessException ex, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
                 new StandardError(
                         LocalDateTime.now(),
-                        HttpStatus.BAD_REQUEST.value(),
+                        HttpStatus.UNPROCESSABLE_ENTITY.value(),
                         "Business Rule Violation",
                         ex.getMessage(),
                         request.getRequestURI()

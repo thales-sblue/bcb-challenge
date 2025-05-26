@@ -15,6 +15,6 @@ public class ConversationSummaryDTO {
     private String recipientName;
     private String lastMessageContent;
     private Instant lastMessageTime;
-    private int unreadCount;
+    private Integer unreadCount;
 }
 

@@ -28,7 +28,6 @@ public class SwaggerConfig {
                         .description("Documentação completa")
                         .url("https://github.com/thales-sblue/bcb-challenge")
                 )
-                .addSecurityItem(new SecurityRequirement().addList("jwt_auth"))
                 .components(new Components()
                         .addSecuritySchemes("jwt_auth",
                                 new SecurityScheme()

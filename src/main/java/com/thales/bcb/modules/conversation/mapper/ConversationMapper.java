@@ -8,6 +8,7 @@ import com.thales.bcb.modules.message.mapper.MessageMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,17 +18,18 @@ public class ConversationMapper {
 
     private final MessageMapper messageMapper;
 
-    public Conversation toEntity(UUID clientId, UUID recipientId, String recipientName){
+    public Conversation toEntity(UUID clientId, UUID recipientId, String recipientName, String lastMessageContent, Instant lastMessageTime) {
         return Conversation.builder()
                 .clientId(clientId)
                 .recipientId(recipientId)
                 .recipientName(recipientName)
-                .lastMessageContent(null)
-                .lastMessageTime(null)
+                .lastMessageContent(lastMessageContent)
+                .lastMessageTime(lastMessageTime)
                 .unreadCount(0)
                 .build();
     }
-    public ConversationResponseDTO toResponse(Conversation conversation, List<Message> messages){
+
+    public ConversationResponseDTO toResponse(Conversation conversation, List<Message> messages) {
         return ConversationResponseDTO.builder()
                 .id(conversation.getId())
                 .clientId(conversation.getClientId())
@@ -42,7 +44,7 @@ public class ConversationMapper {
                 .build();
     }
 
-    public ConversationSummaryDTO toSummary(Conversation conversation){
+    public ConversationSummaryDTO toSummary(Conversation conversation) {
         return ConversationSummaryDTO.builder()
                 .id(conversation.getId())
                 .clientId(conversation.getClientId())

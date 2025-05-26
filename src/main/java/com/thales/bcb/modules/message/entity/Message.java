@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name="messages")
+@Table(name="message")
 @Getter
 @Setter
 @NoArgsConstructor
